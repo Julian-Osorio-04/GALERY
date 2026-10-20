@@ -397,8 +397,30 @@ h2 { margin: 0; font-family: var(--font-display); font-size: 23px; font-weight: 
 
 .image-dialog::backdrop { background: rgb(14 20 16 / 90%); }
 .image-dialog-content { display: grid; justify-items: center; gap: 10px; margin: 0; }
-.image-dialog-photo { display: block; max-width: 96vw; max-height: calc(96dvh - 48px); object-fit: contain; }
+.image-dialog-photo { display: block; max-width: 88vw; max-height: calc(96dvh - 48px); object-fit: contain; }
 .image-dialog-title { max-width: 90vw; color: white; font-size: 13px; text-align: center; }
+
+.image-dialog-nav {
+  position: fixed;
+  z-index: 1;
+  top: 50%;
+  display: grid;
+  width: 48px;
+  height: 64px;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: 4px;
+  background: rgb(20 27 22 / 72%);
+  color: white;
+  font-size: 42px;
+  line-height: 1;
+  transition: background-color 150ms ease;
+}
+
+.image-dialog-nav:hover { background: var(--green); }
+.image-dialog-previous { left: 14px; }
+.image-dialog-next { right: 14px; }
 
 .image-dialog-close {
   position: fixed;

@@ -24,6 +24,8 @@ const dialogoImagen = document.querySelector('#image-dialog');
 const imagenAmpliada = document.querySelector('#image-dialog-photo');
 const tituloImagenAmpliada = document.querySelector('#image-dialog-title');
 const botonCerrarImagen = document.querySelector('#close-image-dialog');
+const botonFotoAnterior = document.querySelector('#previous-image');
+const botonFotoSiguiente = document.querySelector('#next-image');
 const estadoVacio = document.querySelector('#empty-state');
 const campoBusqueda = document.querySelector('#search-input');
 const filtroCategoria = document.querySelector('#category-filter');
@@ -33,6 +35,7 @@ const fotosVisibles = document.querySelector('#visible-photos');
 const fotoDestacada = document.querySelector('#top-rated');
 
 let idEnEdicion = null;
+let tarjetaActual = null;
 
 // Carga los datos guardados. Si es la primera visita, muestra ejemplos editables.
 function cargarFotos() {
@@ -78,6 +81,7 @@ function guardarFotos() {
 function crearTarjeta(foto) {
   const tarjeta = document.createElement('article');
   tarjeta.className = 'photo-card';
+  tarjeta.dataset.photoId = foto.id;
   const visual = document.createElement('div');
   visual.className = 'photo-visual';
 
@@ -97,7 +101,7 @@ function crearTarjeta(foto) {
   textoAlternativo.textContent = 'Imagen no disponible';
 
   botonAmpliar.append(imagen, textoAlternativo);
-  botonAmpliar.addEventListener('click', () => abrirImagen(foto));
+  botonAmpliar.addEventListener('click', () => abrirImagen(foto, tarjeta));
 
   const etiqueta = document.createElement('button');
   etiqueta.className = 'category-tag';
@@ -149,11 +153,43 @@ function crearTarjeta(foto) {
 }
 
 // Abre el diálogo nativo y muestra la foto seleccionada con su título.
-function abrirImagen(foto) {
+function mostrarFotoEnDialogo(foto) {
   imagenAmpliada.src = foto.url;
   imagenAmpliada.alt = foto.titulo;
   tituloImagenAmpliada.textContent = foto.titulo;
+}
+
+function abrirImagen(foto, tarjeta) {
+  tarjetaActual = tarjeta;
+  mostrarFotoEnDialogo(foto);
   dialogoImagen.showModal();
+}
+
+// Recorre las tarjetas visibles; si llega al extremo, continúa desde el otro lado.
+function cambiarFoto(direccion) {
+  const primeraTarjeta = cuadricula.firstElementChild;
+  const ultimaTarjeta = cuadricula.lastElementChild;
+
+  // Si la galería está vacía o perdió su tarjeta activa, no accedemos a null.
+  if (!primeraTarjeta || !ultimaTarjeta || !tarjetaActual) return;
+
+  let tarjetaDestino;
+  if (direccion < 0) {
+    tarjetaDestino = tarjetaActual === primeraTarjeta
+      ? ultimaTarjeta
+      : tarjetaActual.previousElementSibling;
+  } else {
+    tarjetaDestino = tarjetaActual === ultimaTarjeta
+      ? primeraTarjeta
+      : tarjetaActual.nextElementSibling;
+  }
+
+  if (!tarjetaDestino) return;
+  const fotoDestino = fotos.find((foto) => foto.id === tarjetaDestino.dataset.photoId);
+  if (!fotoDestino) return;
+
+  tarjetaActual = tarjetaDestino;
+  mostrarFotoEnDialogo(fotoDestino);
 }
 
 // Aplica los filtros, actualiza estadísticas y dibuja las tarjetas actuales.
@@ -315,6 +351,12 @@ cuadricula.addEventListener('click', (evento) => {
 
 // El diálogo también se puede cerrar con Escape gracias al comportamiento nativo.
 botonCerrarImagen.addEventListener('click', () => dialogoImagen.close());
+botonFotoAnterior.addEventListener('click', () => cambiarFoto(-1));
+botonFotoSiguiente.addEventListener('click', () => cambiarFoto(1));
+dialogoImagen.addEventListener('keydown', (evento) => {
+  if (evento.key === 'ArrowLeft') cambiarFoto(-1);
+  if (evento.key === 'ArrowRight') cambiarFoto(1);
+});
 dialogoImagen.addEventListener('click', (evento) => {
   if (evento.target === dialogoImagen) dialogoImagen.close();
 });
