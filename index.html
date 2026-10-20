@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f6f2">
+  <meta name="description" content="Galería personal para organizar, valorar y explorar fotografías.">
+  <title>Fototeca | Galería e inventario</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="Fototeca, ir al inicio">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <span>fototeca<span class="brand-period">.</span></span>
+    </a>
+    <p class="header-note">Tu colección, bien encuadrada</p>
+  </header>
+
+  <main id="inicio" class="page-shell">
+    <section class="page-intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Galería e inventario personal</p>
+        <h1 id="page-title">Cada foto cuenta<br><span>una historia.</span></h1>
+      </div>
+      <p class="intro-copy">Organiza tus imágenes favoritas, guarda sus detalles y descubre tu colección de un vistazo.</p>
+    </section>
+
+    <section class="stats-section" aria-label="Estadísticas de la colección">
+      <div class="stat-item">
+        <span class="stat-label">Fotos en colección</span>
+        <strong id="total-photos" class="stat-value">0</strong>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Valoración promedio</span>
+        <strong id="average-rating" class="stat-value">0.0 <span class="stat-unit">/ 5</span></strong>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Coincidencias visibles</span>
+        <strong id="visible-photos" class="stat-value">0</strong>
+      </div>
+      <p id="top-rated" class="top-rated" aria-live="polite">Aún no hay fotos valoradas.</p>
+    </section>
+
+    <div class="workspace-layout">
+      <section class="form-panel" aria-labelledby="form-title">
+        <div class="section-heading">
+          <span class="section-index">01</span>
+          <div>
+            <p class="eyebrow">Tu inventario</p>
+            <h2 id="form-title">Añadir una foto</h2>
+          </div>
+        </div>
+
+        <form id="photo-form" novalidate>
+          <label class="field-label" for="photo-title">Título</label>
+          <input id="photo-title" name="titulo" type="text" maxlength="70" placeholder="Ej. Luz de invierno" required>
+
+          <label class="field-label" for="photo-file">Imagen desde tu dispositivo</label>
+          <input id="photo-file" name="archivo" type="file" accept="image/*">
+          <span class="field-hint upload-hint">En el celular puedes elegir una foto o usar la cámara.</span>
+
+          <label class="field-label" for="photo-url">O pega una URL de imagen</label>
+          <input id="photo-url" name="url" type="url" placeholder="https://ejemplo.com/foto.jpg">
+
+          <label class="field-label" for="photo-category">Categoría</label>
+          <select id="photo-category" name="categoria" required>
+            <option value="" disabled selected>Selecciona una categoría</option>
+            <option value="Naturaleza">Naturaleza</option>
+            <option value="Ciudad">Ciudad</option>
+            <option value="Retrato">Retrato</option>
+            <option value="Arquitectura">Arquitectura</option>
+            <option value="Otros">Otros</option>
+          </select>
+
+          <label class="field-label" for="photo-description">Descripción</label>
+          <textarea id="photo-description" name="descripcion" rows="3" maxlength="220" placeholder="¿Qué hace especial esta imagen?" required></textarea>
+
+          <label class="field-label" for="photo-rating">Valoración <span class="field-hint">de 1 a 5</span></label>
+          <input id="photo-rating" name="valoracion" type="number" min="1" max="5" step="1" value="5" required>
+
+          <p id="form-message" class="form-message" role="alert" aria-live="polite"></p>
+          <div class="form-actions">
+            <button id="submit-button" class="button button-primary" type="submit">Guardar foto <span aria-hidden="true">+</span></button>
+            <button id="cancel-edit" class="button button-quiet" type="button" hidden>Cancelar edición</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="gallery-section" aria-labelledby="gallery-title">
+        <div class="gallery-heading">
+          <div class="section-heading">
+            <span class="section-index">02</span>
+            <div>
+              <p class="eyebrow">Explora y organiza</p>
+              <h2 id="gallery-title">La colección</h2>
+            </div>
+          </div>
+          <p class="gallery-caption">Una mirada a tus momentos guardados.</p>
+        </div>
+
+        <div class="filter-bar" aria-label="Filtros de la galería">
+          <label class="search-field" for="search-input">
+            <span class="visually-hidden">Buscar por título</span>
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="search-input" type="search" placeholder="Buscar por título..." autocomplete="off">
+          </label>
+          <label class="filter-select" for="category-filter">
+            <span class="visually-hidden">Filtrar por categoría</span>
+            <select id="category-filter">
+              <option value="todas">Todas las categorías</option>
+              <option value="Naturaleza">Naturaleza</option>
+              <option value="Ciudad">Ciudad</option>
+              <option value="Retrato">Retrato</option>
+              <option value="Arquitectura">Arquitectura</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="photo-grid" class="photo-grid" aria-live="polite" aria-busy="false"></div>
+        <p id="empty-state" class="empty-state" hidden>
+          <span class="empty-icon" aria-hidden="true">▧</span>
+          <strong>No encontramos fotos</strong>
+          <span>Prueba otra búsqueda o añade una foto a tu colección.</span>
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <dialog id="image-dialog" class="image-dialog" aria-labelledby="image-dialog-title">
+    <button id="close-image-dialog" class="image-dialog-close" type="button" aria-label="Cerrar imagen">&times;</button>
+    <figure class="image-dialog-content">
+      <img id="image-dialog-photo" class="image-dialog-photo" alt="">
+      <figcaption id="image-dialog-title" class="image-dialog-title"></figcaption>
+    </figure>
+  </dialog>
+
+  <footer class="site-footer">
+    <span>FOTOTECA <span class="brand-period">/</span> INVENTARIO PERSONAL</span>
+    <span>Hecho para guardar lo que merece quedarse.</span>
+  </footer>
+</body>
+</html>
