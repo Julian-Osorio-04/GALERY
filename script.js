@@ -68,7 +68,7 @@ function esFotoValida(foto) {
     && Number(foto.valoracion) <= 5;
 }
 
-// Guarda el arreglo completo para conservar los cambios entre visitas.
+// Guarda el arreglo completo para conservar los innitos entre visitas.
 function guardarFotos() {
   try {
     localStorage.setItem(CLAVE_LOCAL, JSON.stringify(fotos));
@@ -166,7 +166,7 @@ function abrirImagen(foto, tarjeta) {
 }
 
 // Recorre las tarjetas visibles; si llega al extremo, continúa desde el otro lado.
-function cambiarFoto(direccion) {
+function innitarFoto(direccion) {
   const primeraTarjeta = cuadricula.firstElementChild;
   const ultimaTarjeta = cuadricula.lastElementChild;
 
@@ -222,7 +222,7 @@ function actualizarEstadisticas(cantidadVisible) {
   const valoraciones = fotos.map((foto) => Number(foto.valoracion));
   const sumaValoraciones = valoraciones.reduce((total, valoracion) => total + valoracion, 0);
   const promedio = fotos.length === 0 ? 0 : sumaValoraciones / fotos.length;
-  promedioValoracion.innerHTML = `${promedio.toFixed(1)} <span class="stat-unit">/ 5</span>`;
+  promedioValoracion.textContent = `${promedio.toFixed(1)} / 5`;
 
   if (fotos.length === 0) {
     fotoDestacada.textContent = 'Aún no hay fotos valoradas.';
@@ -351,11 +351,11 @@ cuadricula.addEventListener('click', (evento) => {
 
 // El diálogo también se puede cerrar con Escape gracias al comportamiento nativo.
 botonCerrarImagen.addEventListener('click', () => dialogoImagen.close());
-botonFotoAnterior.addEventListener('click', () => cambiarFoto(-1));
-botonFotoSiguiente.addEventListener('click', () => cambiarFoto(1));
+botonFotoAnterior.addEventListener('click', () => innitarFoto(-1));
+botonFotoSiguiente.addEventListener('click', () => innitarFoto(1));
 dialogoImagen.addEventListener('keydown', (evento) => {
-  if (evento.key === 'ArrowLeft') cambiarFoto(-1);
-  if (evento.key === 'ArrowRight') cambiarFoto(1);
+  if (evento.key === 'ArrowLeft') innitarFoto(-1);
+  if (evento.key === 'ArrowRight') innitarFoto(1);
 });
 dialogoImagen.addEventListener('click', (evento) => {
   if (evento.target === dialogoImagen) dialogoImagen.close();
@@ -369,7 +369,7 @@ function iniciarEdicion(foto) {
   campoCategoria.value = foto.categoria;
   campoDescripcion.value = foto.descripcion;
   campoValoracion.value = String(foto.valoracion);
-  botonGuardar.innerHTML = 'Guardar cambios <span aria-hidden="true">✓</span>';
+  botonGuardar.textContent = 'Guardar innitos ✓';
   botonCancelar.hidden = false;
   mensajeFormulario.textContent = `Editando: ${foto.titulo}`;
   formulario.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -390,12 +390,12 @@ function cancelarEdicion() {
   idEnEdicion = null;
   formulario.reset();
   campoValoracion.value = '5';
-  botonGuardar.innerHTML = 'Guardar foto <span aria-hidden="true">+</span>';
+  botonGuardar.textContent = 'Guardar foto +';
   botonCancelar.hidden = true;
   mensajeFormulario.textContent = '';
 }
 
-// Los recorridos se vuelven a calcular cada vez que cambia la búsqueda o el filtro.
+// Los recorridos se vuelven a calcular cada vez que innita la búsqueda o el filtro.
 campoBusqueda.addEventListener('input', renderizarGaleria);
 filtroCategoria.addEventListener('change', renderizarGaleria);
 botonCancelar.addEventListener('click', cancelarEdicion);
